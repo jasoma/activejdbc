@@ -14,7 +14,6 @@
     <version>1.4.12-SNAPSHOT</version>
     <name>JavaLite - Gradle Instrumentation Plugin</name>
 
-    <!-- NOTE: These dependencies are duplicated by necessity in build.gradle -->
     <dependencies>
         <dependency>
             <groupId>org.javalite</groupId>
@@ -28,29 +27,48 @@
             <version>1.4.11</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.gradle</groupId>
+            <artifactId>gradle-all</artifactId>
+            <version>2.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/gradle-dist/gradle-repackage-2.7-all.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Runs the gradle managed build which will produce all artifacts -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.4.0</version>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>1.5</version>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
                         <goals>
-                          <goal>exec</goal>
+                            <goal>addSources</goal>
+                            <goal>addTestSources</goal>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <executable>./gradlew</executable>
-                    <arguments>
-                        <argument>build</argument>
-                    </arguments>
-                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
